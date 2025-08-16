@@ -1,0 +1,37 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Build started on `date`
+      - echo Installing dependencies...
+      - npm install
+
+  build:
+    commands:
+      - echo Building the React application...
+      - npm run build
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Deploying to S3...
+      # Upload static assets with long cache
+      - aws s3 sync build/ s3://mydpjg-react-kanban-app-2024 --delete --cache-control "max-age=31536000" --exclude "*.html" --exclude "*.json"
+      # Upload HTML files with no-cache
+      - aws s3 sync build/ s3://mydpjg-react-kanban-app-2024 --delete --cache-control "no-cache" --include "*.html" --include "*.json"
+      - echo Invalidating CloudFront...
+      # Get CloudFront distribution ID and invalidate cache
+      - DISTRIBUTION_ID=$(aws cloudfront list-distributions --query 'DistributionList.Items[?Comment==`React Kanban App Distribution`].Id' --output text)
+      - |
+        if [ ! -z "$DISTRIBUTION_ID" ] && [ "$DISTRIBUTION_ID" != "None" ]; then
+          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+          echo "✅ CloudFront cache invalidated for distribution: $DISTRIBUTION_ID"
+        else
+          echo "⚠️ No CloudFront distribution found"
+        fi
+
+artifacts:
+  files:
+    - "**/*"
+  base-directory: build
