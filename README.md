@@ -1,4 +1,4 @@
-# 🚀 AWS Full-Stack Kanban Task Manager
+# 🚀 AWS Powered Kanban Task Manager
 
 A modern, serverless task management application built with React and deployed on AWS infrastructure. This project demonstrates a complete full-stack development workflow using AWS cloud services.
 
