@@ -1,95 +1,300 @@
-# Task Management App
+# 🚀 AWS Full-Stack Kanban Task Manager
 
-A simple yet powerful **Kanban Board** built with **React** that allows you to manage tasks across multiple boards.  
-This project demonstrates **core React concepts** and serves as a hands-on learning project for beginners transitioning into real-world development.
+A modern, serverless task management application built with React and deployed on AWS infrastructure. This project demonstrates a complete full-stack development workflow using AWS cloud services.
 
----
+![Kanban Board](https://img.shields.io/badge/Status-Live-brightgreen)
+![AWS](https://img.shields.io/badge/AWS-Serverless-orange)
+![React](https://img.shields.io/badge/React-18-blue)
 
-## 🚀 Features
+🌐 **Live Demo**: [https://dpjgreact.art](https://dpjgreact.art)
 
-✅ Create multiple tasks under boards (Todo, In Progress, Done)  
-✅ Mark tasks as **completed** or **edit/delete** them  
-✅ **Move tasks** between boards (via dropdown or drag-and-drop)  
-✅ **Persistent storage** using `localStorage`  
-✅ **Filter tasks** by status (All, Active, Completed)  
-✅ Modern **UI styling** with a black-purple gradient theme
+## ✨ Features
 
----
+- **Drag & Drop Interface**: Intuitive task management with visual feedback
+- **Real-time Persistence**: Tasks automatically sync with cloud database
+- **Responsive Design**: Works seamlessly across desktop and mobile devices
+- **Glass Morphism UI**: Modern, aesthetic interface with backdrop filters
+- **Auto-save**: Changes are automatically saved as you work
+- **Fallback Support**: Dropdown alternative for accessibility
+
+## 🏗️ Architecture
+
+This application showcases a modern serverless architecture using AWS services:
+
+```
+Frontend (React) → CloudFront → S3 Static Hosting
+                ↓
+            API Gateway → Lambda Functions → DynamoDB
+                ↓
+            Route 53 (Custom Domain) + ACM (SSL)
+                ↓
+            CodePipeline (CI/CD) + CodeBuild
+```
 
 ## 🛠️ Tech Stack
 
-- **React (Hooks & Functional Components)**
-- **HTML, CSS (Modern Flexbox Layout)**
-- **Local Storage API**
-- **JavaScript ES6+**
+### Frontend
 
----
+- **React 18** - Modern React with Hooks
+- **CSS3** - Glass morphism design with animations
+- **HTML5 Drag & Drop API** - Native browser interactions
 
-## 📚 React Concepts Used
+### Backend & Infrastructure
 
-This project serves as a **revision exercise**, covering:
+- **AWS Lambda** - Serverless functions for API endpoints
+- **Amazon DynamoDB** - NoSQL database for task storage
+- **API Gateway** - RESTful API with CORS configuration
+- **Amazon S3** - Static website hosting
+- **CloudFront** - Global CDN for fast content delivery
+- **Route 53** - DNS management with custom domain
+- **AWS Certificate Manager** - SSL/TLS certificates
+- **CodePipeline & CodeBuild** - Automated CI/CD deployment
 
-- **Components & JSX** – Breaking the UI into reusable components (`Board`, `Task`, `Header`)
-- **Props & State** – Passing data down and managing board/task state
-- **Controlled Components** – Handling form inputs for adding/editing tasks
-- **State Management** – Updating nested state (boards & tasks) immutably
-- **Prop Drilling** – Sharing functions like `addTask`, `deleteTask` between components
-- **Reconciliation & Re-rendering** – React’s diffing algorithm in action while updating lists
-- **Event Handling** – Buttons, dropdowns, drag-and-drop events
-- **Side Effects** – Using `useEffect` for persistent storage
-- **Conditional Rendering** – Editing mode vs. normal task display
+### DevOps
 
----
-
-## 📂 Project Structure
-
-```
-src/
-│── App.jsx          # Main component managing all boards
-│── Board.jsx        # Individual board with tasks
-│── Task.jsx         # Task item component
-│── Header.jsx       # App header
-│── App.css          # Styling
-```
-
----
+- **Git** - Version control
+- **GitHub** - Source code repository
+- **AWS CodePipeline** - Continuous integration and deployment
+- **Infrastructure as Code** - AWS services configuration
 
 ## 🚀 Getting Started
 
-1️⃣ **Clone the repository**
+### Prerequisites
+
+- Node.js 16+ and npm
+- AWS Account (for deployment)
+- Git
+
+### Local Development
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/yourusername/react-kanban-aws.git
+   cd react-kanban-aws/React_Basics_List
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Start development server**
+
+   ```bash
+   npm start
+   ```
+
+4. **Open in browser**
+   ```
+   http://localhost:3000
+   ```
+
+### Local API Configuration
+
+To connect to your own AWS backend:
+
+1. Update the API URL in `src/api.js`:
+
+   ```javascript
+   const API_BASE_URL = "your-api-gateway-url";
+   ```
+
+2. Configure AWS credentials for local testing (optional)
+
+## ☁️ AWS Deployment Guide
+
+### 1. Frontend Deployment (S3 + CloudFront)
 
 ```bash
-git clone https://github.com/your-username/kanban-board.git
+# Build the application
+npm run build
+
+# Deploy to S3 (configure AWS CLI first)
+aws s3 sync build/ s3://your-bucket-name --delete
+
+# Invalidate CloudFront cache
+aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"
 ```
 
-2️⃣ **Navigate to project folder**
+### 2. Backend Setup
+
+1. **DynamoDB Table**
+
+   - Table name: `kanban-tasks`
+   - Partition key: `userId` (String)
+   - Sort key: `taskId` (String)
+
+2. **Lambda Functions**
+
+   - Deploy `lambda/get-kanban-tasks.js`
+   - Deploy `lambda/store-kanban-tasks.js`
+   - Configure DynamoDB permissions
+
+3. **API Gateway**
+   - Create REST API
+   - Configure `/tasks` resource with GET and POST methods
+   - Enable CORS
+   - Deploy to production stage
+
+### 3. CI/CD Pipeline
+
+The project includes automated deployment using AWS CodePipeline:
+
+- **Source Stage**: GitHub repository integration
+- **Test Stage**: Automated testing with Jest
+- **Build Stage**: React application build process
+- **Deploy Stage**: S3 upload and CloudFront invalidation
+
+Configuration files:
+
+- `buildspec.yml` - Build and deploy commands
+- `buildspec-test.yml` - Testing configuration
+
+## 🔧 Configuration
+
+### Environment Variables
+
+For production deployment, configure these in your CI/CD pipeline:
 
 ```bash
-cd kanban-board
+S3_BUCKET=your-s3-bucket-name
+CLOUDFRONT_DISTRIBUTION_ID=your-distribution-id
+API_BASE_URL=your-api-gateway-url
 ```
 
-3️⃣ **Install dependencies**
+### CORS Configuration
+
+API Gateway CORS settings:
+
+```
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Content-Type,X-Amz-Date,Authorization,X-Api-Key
+Access-Control-Allow-Methods: GET,POST,OPTIONS
+```
+
+## 📊 Project Structure
+
+```
+React_Basics_List/
+├── public/
+│   └── index.html
+├── src/
+│   ├── App.js              # Main React component
+│   ├── App.css             # Styling and animations
+│   ├── Board.js            # Board component
+│   ├── Task.js             # Individual task component
+│   ├── api.js              # API service layer
+│   └── index.js            # React app entry point
+├── lambda/
+│   ├── get-kanban-tasks.js  # Lambda function for GET requests
+│   └── store-kanban-tasks.js # Lambda function for POST requests
+├── aws-deployment/
+│   └── *.md                # AWS setup documentation
+├── buildspec.yml           # CodeBuild configuration
+├── buildspec-test.yml      # Testing configuration
+└── package.json            # Dependencies and scripts
+```
+
+## 🧪 Testing
+
+Run the test suite:
 
 ```bash
-npm install
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm test -- --coverage
+
+# Run tests in CI mode
+npm test -- --ci --watchAll=false
 ```
 
-4️⃣ **Run the project**
+## 🎨 Key Features Implementation
 
-```bash
-npm start
-```
+### Drag and Drop
+
+- HTML5 Drag and Drop API integration
+- Visual feedback during drag operations
+- Cross-board task movement
+- Fallback dropdown for accessibility
+
+### Data Persistence
+
+- Automatic save with debouncing (500ms delay)
+- Optimistic UI updates
+- Error handling with graceful fallbacks
+- Real-time synchronization with DynamoDB
+
+### Responsive Design
+
+- Mobile-first approach
+- CSS Grid and Flexbox layouts
+- Touch-friendly interface
+- Adaptive card sizing
+
+## 🚀 Performance Optimizations
+
+- **CloudFront CDN** - Global content delivery
+- **S3 Static Hosting** - Fast, scalable frontend hosting
+- **Lambda Cold Start Optimization** - Efficient serverless functions
+- **DynamoDB Single-Table Design** - Optimized database queries
+- **CSS Animations** - Hardware-accelerated transforms
+- **Code Splitting** - Optimized bundle loading
+
+## 🔐 Security
+
+- **HTTPS Only** - SSL/TLS encryption via CloudFront
+- **CORS Configuration** - Proper cross-origin resource sharing
+- **IAM Roles** - Least privilege access for AWS services
+- **Input Validation** - Client and server-side validation
+- **API Rate Limiting** - Built-in AWS API Gateway throttling
+
+## 📈 Monitoring & Analytics
+
+- **CloudWatch Logs** - Lambda function monitoring
+- **API Gateway Metrics** - Request/response analytics
+- **CloudFront Reports** - Global usage statistics
+- **Error Tracking** - Comprehensive error logging
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Your Name**
+
+- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
+- Portfolio: [https://dpjgreact.art](https://dpjgreact.art)
+
+## 🙏 Acknowledgments
+
+- AWS Documentation and best practices
+- React team for excellent documentation
+- Modern CSS design patterns and Glass Morphism trends
+- Open source community for inspiration
 
 ---
 
-## 🌟 Future Improvements
+⭐ **Star this repository if you found it helpful!**
 
-- ✅ Dark/Light theme toggle
-- ✅ Drag-and-drop **board reordering**
-- ✅ Backend API integration for multi-user collaboration
+This project demonstrates proficiency in:
 
----
-
-## 🙌 Acknowledgement
-
-This project was built as a **learning exercise** to practice **React fundamentals** and replicate a real-world junior developer workflow.
+- Modern React development
+- AWS cloud architecture
+- Serverless computing
+- CI/CD pipelines
+- Full-stack development
+- DevOps practices

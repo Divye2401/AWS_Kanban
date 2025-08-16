@@ -21,7 +21,12 @@ export default function Task({
   }
 
   return (
-    <li className="task-item" draggable onDragStart={handleDragStart}>
+    <li
+      className="task-item"
+      draggable={true}
+      onDragStart={handleDragStart}
+      style={{ margin: "10px" }}
+    >
       {isEditing ? (
         <>
           <input value={newText} onChange={(e) => setNewText(e.target.value)} />

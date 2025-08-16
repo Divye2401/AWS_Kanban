@@ -138,11 +138,16 @@ export default function App() {
   return (
     <>
       <header>
-        Organize Your Tasks Efficiently!
+        🚀 Kanban Task Manager
         {loading && (
-          <span style={{ color: "#888", fontSize: "0.8em" }}>
-            {" "}
-            (Loading...)
+          <span
+            style={{
+              color: "rgba(255,255,255,0.7)",
+              fontSize: "0.8em",
+              marginLeft: "10px",
+            }}
+          >
+            Loading...
           </span>
         )}
       </header>

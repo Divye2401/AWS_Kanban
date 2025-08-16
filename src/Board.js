@@ -49,6 +49,7 @@ export default function Board({
         placeholder="New task"
         value={text}
         onChange={(e) => setText(e.target.value)}
+        style={{ backgroundColor: "transparent", margin: "10px" }}
       />
       <button
         onClick={() => {
