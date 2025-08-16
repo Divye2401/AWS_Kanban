@@ -1,23 +1,52 @@
 import { useState, useEffect } from "react";
 import Board from "./Board";
+import { taskAPI } from "./api";
 import "./App.css";
 
 export default function App() {
-  const [boards, setBoards] = useState(() => {
-    const saved = localStorage.getItem("boards");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          { id: 1, title: "Todo", tasks: [] },
-          { id: 2, title: "In Progress", tasks: [] },
-          { id: 3, title: "Done", tasks: [] },
-        ];
-  });
+  const [boards, setBoards] = useState([
+    { id: 1, title: "Todo", tasks: [] },
+    { id: 2, title: "In Progress", tasks: [] },
+    { id: 3, title: "Done", tasks: [] },
+  ]);
+  const [loading, setLoading] = useState(true);
 
-  // ✅ Save to localStorage whenever boards change
+  // ✅ Load tasks from API on component mount
   useEffect(() => {
-    localStorage.setItem("boards", JSON.stringify(boards));
-  }, [boards]);
+    loadTasks();
+  }, []);
+
+  // ✅ Save to API whenever boards change (with debounce)
+  useEffect(() => {
+    if (!loading) {
+      const timeoutId = setTimeout(() => {
+        saveTasks();
+      }, 500); // Debounce saves by 500ms
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [boards, loading]);
+
+  async function loadTasks() {
+    try {
+      setLoading(true);
+      const boardsFromAPI = await taskAPI.getTasks();
+      setBoards(boardsFromAPI);
+    } catch (error) {
+      console.error("Failed to load tasks:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function saveTasks() {
+    try {
+      await taskAPI.saveTasks(boards);
+    } catch (error) {
+      console.error("Failed to save tasks:", error);
+      // Could show user notification here
+    }
+  }
 
   function addTask(boardId, text) {
     if (!text.trim()) return;
@@ -108,7 +137,15 @@ export default function App() {
 
   return (
     <>
-      <header>Organize Your Tasks Efficiently! Checking CodePipeline!</header>
+      <header>
+        Organize Your Tasks Efficiently!
+        {loading && (
+          <span style={{ color: "#888", fontSize: "0.8em" }}>
+            {" "}
+            (Loading...)
+          </span>
+        )}
+      </header>
       <div className="board-container">
         {boards.map((board) => (
           <div
