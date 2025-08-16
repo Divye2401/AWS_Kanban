@@ -8,14 +8,6 @@ A modern, serverless task management application built with React and deployed o
 
 🌐 **Live Demo**: [https://dpjgreact.art](https://dpjgreact.art)
 
-## ✨ Features
-
-- **Drag & Drop Interface**: Intuitive task management with visual feedback
-- **Real-time Persistence**: Tasks automatically sync with cloud database
-- **Responsive Design**: Works seamlessly across desktop and mobile devices
-- **Auto-save**: Changes are automatically saved as you work
-- **Fallback Support**: Dropdown alternative for accessibility
-
 ## 🏗️ Architecture
 
 This application showcases a modern serverless architecture using AWS services:
@@ -55,6 +47,14 @@ Frontend (React) → CloudFront → S3 Static Hosting
 - **GitHub** - Source code repository
 - **AWS CodePipeline** - Continuous integration and deployment
 - **Infrastructure as Code** - AWS services configuration
+
+## ✨ Features
+
+- **Drag & Drop Interface**: Intuitive task management with visual feedback
+- **Real-time Persistence**: Tasks automatically sync with cloud database
+- **Responsive Design**: Works seamlessly across desktop and mobile devices
+- **Auto-save**: Changes are automatically saved as you work
+- **Fallback Support**: Dropdown alternative for accessibility
 
 ## 🚀 Getting Started
 
