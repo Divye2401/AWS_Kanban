@@ -13,7 +13,6 @@ A modern, serverless task management application built with React and deployed o
 - **Drag & Drop Interface**: Intuitive task management with visual feedback
 - **Real-time Persistence**: Tasks automatically sync with cloud database
 - **Responsive Design**: Works seamlessly across desktop and mobile devices
-- **Glass Morphism UI**: Modern, aesthetic interface with backdrop filters
 - **Auto-save**: Changes are automatically saved as you work
 - **Fallback Support**: Dropdown alternative for accessibility
 
