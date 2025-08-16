@@ -108,7 +108,7 @@ export default function App() {
 
   return (
     <>
-      <header>Organize Your Tasks Efficiently</header>
+      <header>Organize Your Tasks Efficiently! Checking CodePipeline</header>
       <div className="board-container">
         {boards.map((board) => (
           <div
