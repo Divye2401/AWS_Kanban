@@ -15,7 +15,7 @@ export default function App() {
   useEffect(() => {
     loadTasks();
   }, []);
-
+  //JG
   // ✅ Save to API whenever boards change (with debounce)
   useEffect(() => {
     if (!loading) {
