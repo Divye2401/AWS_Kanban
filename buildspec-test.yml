@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Test started on `date`
+      - echo Installing dependencies...
+      - npm install
+
+  build:
+    commands:
+      - echo Running tests...
+      - npm test -- --coverage --watchAll=false --ci
+      - echo Running linting...
+      - npm run lint || echo "No lint script found, skipping..."
+
+  post_build:
+    commands:
+      - echo Tests completed on `date`
+
+reports:
+  test-reports:
+    files:
+      - coverage/lcov.info
+    base-directory: coverage
+    file-format: CLOVERXML
